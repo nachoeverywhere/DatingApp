@@ -1,0 +1,28 @@
+<form #registroForm="ngForm" (ngSubmit)="registro(model)">
+  <h2 class="text-center text-primary">Unete!</h2>
+  <hr>
+
+  <div class="form-group">
+    <label for="username">Nombre de usuario:</label>
+    <input type="text" class="form-control" required name="username" id="username" placeholder="Username" [(ngModel)]="model.Username">
+  </div>
+
+  <!--Recibir valores de clase padre-->
+  <!--<div class="form-group">
+    <label for="valorFavorito">Cual es tu valor favorito?</label>
+    <select class="form-control" id="valorFavorito">
+      <option *ngFor="let valor of valoresDeInicio">{{valor.id}}</option>
+    </select>
+  </div>--> 
+
+  <div class="form-group">
+    <label for="password">Clave:</label>
+    <input type="password" class="form-control" required name="password" id="password" placeholder="Password" [(ngModel)]="model.Password">
+  </div>
+
+  <div  class="form-group text-center">
+    <button [disabled]="!registroForm.valid" class="btn btn-success" type="submit">Registrarse</button>
+    <button class="btn btn-default" type="button" (click)="cancelar()">Cancelar</button>
+  </div>
+  
+</form>

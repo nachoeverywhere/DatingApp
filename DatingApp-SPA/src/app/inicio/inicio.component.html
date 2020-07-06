@@ -1,0 +1,22 @@
+<div class="container mt-5">
+ 
+  <div *ngIf="!modoRegistro"style="text-align: center">
+    <h1>Encuentra a tu amor!</h1>
+    <p class="lead">Simplemente tienes que registrarte.</p>
+    <div class="text-center">
+      <button class="btn btn-primary btn-lg rounded-0" (click)="disparadorRegistro()">Registro</button>
+      <button class="btn btn-info btn-lg rounded-0">Dime mas</button>
+    </div>
+  </div>
+
+  <div *ngIf="modoRegistro" class="container">
+    <div class="row justify-content-center">
+      <div class="col-4">                         <!--Nombre del la variable de salida del hijo / Metodo del padre (recibe el evento emitido por el metodo del hijo)-->
+        <app-registro  (cancelarRegistro)="cancelarModoRegistro($event)"></app-registro>
+        <!--Recibir valores de clase padre: [valoresDeInicio]="valores"-->
+      </div>
+    </div>
+  </div>
+
+</div>
+
