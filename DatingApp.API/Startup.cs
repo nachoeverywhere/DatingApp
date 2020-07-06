@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
+using DatingApp.API.Helpers;
 using DatingApp.API.Interfaces;
 using DatingApp.API.Repositorios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +61,20 @@ namespace DatingApp.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else // Agrego el else y el contenido para manejar excepciones globales. 
+            { 
+                app.UseExceptionHandler(builder => {
+                    builder.Run(async context => { // Corro la respuesta del contexto (muestro el error que obtengo en los pasos siguientes)
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                        var error = context.Features.Get<IExceptionHandlerFeature>(); //Recibo el el error devuelto por la excepcion 
+                        if (error != null){
+                            context.Response.AgregarErrorDeAplicacion(error.Error.Message); //Creo un metodo de extension para poder procesar los errores y mostrarlos con mas informacion. (En el formato que quiera)
+                            await context.Response.WriteAsync(error.Error.Message); // Me quedo con el texto del error 
+                        }
+                    });
+                });
             }
 
             // app.UseHttpsRedirection();

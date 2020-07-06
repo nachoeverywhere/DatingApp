@@ -9,7 +9,7 @@ import { NavComponent } from './nav/nav.component';
 
 import { RegistroComponent } from './registro/registro.component';
 import { InicioComponent } from './inicio/inicio.component';
-
+import { ErrorInterceptorProvider } from './_services/error.interceptor';
 @NgModule({
    declarations: [
       AppComponent,
@@ -23,7 +23,8 @@ import { InicioComponent } from './inicio/inicio.component';
       FormsModule
    ],
    providers: [
-      AuthService
+      AuthService,
+      ErrorInterceptorProvider
    ],
    bootstrap: [
       AppComponent
