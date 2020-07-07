@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   selector: 'app-registro',
@@ -13,7 +13,7 @@ export class RegistroComponent implements OnInit {
 
   model: any = {};
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
   }
@@ -22,8 +22,8 @@ export class RegistroComponent implements OnInit {
 
   registro(){
     this.authService.registrar(this.model).subscribe( () => {
-    console.log('Exito');
-    }, error => {console.log(error); } );
+      this.alertify.exito('Exito');
+    }, error => {this.alertify.error(error); } );
   }
 
   cancelar(){

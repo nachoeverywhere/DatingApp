@@ -16,5 +16,9 @@
     {
       "path": "./e2e/tsconfig.json"
     }
+],
+"typeRoots": [
+  "node_modules/@types",
+  "src/typings.d.ts"
 ]
 }

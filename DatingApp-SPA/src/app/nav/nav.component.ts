@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from '../_services/alertify.service';
+
 
 @Component({
   selector: 'app-nav',
@@ -8,27 +10,26 @@ import { AuthService } from '../_services/auth.service';
 })
 export class NavComponent implements OnInit {
   model: any = {};
-  constructor(private authService: AuthService) { }
+  constructor(public authService: AuthService, private alertify: AlertifyService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  ingresar(){
+  ingresar(): void{
     this.authService.ingresar(this.model).subscribe(next => {
-      console.log('Exito');
+      this.alertify.exito('Exito');
     }, error => {
-      console.log(error);
+      this.alertify.error(error);
     });
   }
 
-  sesionActiva(){
-    const token = localStorage.getItem('token');
-    return !!token;
+  sesionActiva(): any{
+    return this.authService.sessionActiva();
   }
 
 
-  salir(){
-    localStorage.removeItem('token');
-    console.log('Sesion cerrada');
+  salir(): void{
+    localStorage.removeItem('DTApp-token');
+    this.alertify.mensaje('Sesion cerrada');
   }
 }

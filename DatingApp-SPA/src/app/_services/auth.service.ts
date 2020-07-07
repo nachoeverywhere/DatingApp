@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {map} from 'rxjs/operators';
-
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 // Injectable significa que puede ser injectado en componentes.
 @Injectable({
@@ -11,16 +11,19 @@ import {map} from 'rxjs/operators';
 
 export class AuthService {
 baseUrl = 'http://localhost:5000/api/auth/';
+jwtHelper = new JwtHelperService();
+tokenDesencriptado: any;
 
 constructor(private http: HttpClient) {}
 
-ingresar(model: any){
+ingresar(model: any): any{
   return this.http.post(this.baseUrl + 'ingresar', model).pipe
   (
     map((response: any) => {
       const usuario = response;
       if (usuario){
-        localStorage.setItem('token', usuario.token);
+        localStorage.setItem('DTApp-token', usuario.token);
+        this.tokenDesencriptado = this.jwtHelper.decodeToken(usuario.token);
       }
     })
   );
@@ -30,8 +33,14 @@ ingresar(model: any){
  // y mapea a una variable temporal llamada usuario, ya que la respuesta es un JSON
  // Puede acceder a sus atributos con '.' , en este caso nos quedamos ocn el token.
 
- registrar(model: any){
+ registrar(model: any): any{
    return this.http.post(this.baseUrl + 'registrar', model);
+ }
+
+ sessionActiva(): any{
+   const token = localStorage.getItem('DTApp-token');
+   return !this.jwtHelper.isTokenExpired(token);
+   // Le pongo ! ya que indicaria que existe un token y que este no esta expirado -> esta logueado.
  }
 
 }
