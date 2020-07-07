@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { AlertifyService } from '../_services/alertify.service';
 })
 export class NavComponent implements OnInit {
   model: any = {};
-  constructor(public authService: AuthService, private alertify: AlertifyService) { }
+  constructor(public authService: AuthService, private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -18,9 +19,13 @@ export class NavComponent implements OnInit {
   ingresar(): void{
     this.authService.ingresar(this.model).subscribe(next => {
       this.alertify.exito('Exito');
+      // Podria redireccionar directamente desde aqui. Pero para probar lo hago mas abajo.
     }, error => {
       this.alertify.error(error);
-    });
+    }, () => {
+      this.router.navigate(['/usuarios']);
+    }
+    );
   }
 
   sesionActiva(): any{
@@ -31,5 +36,6 @@ export class NavComponent implements OnInit {
   salir(): void{
     localStorage.removeItem('DTApp-token');
     this.alertify.mensaje('Sesion cerrada');
+    this.router.navigate(['/inicio']);
   }
 }
