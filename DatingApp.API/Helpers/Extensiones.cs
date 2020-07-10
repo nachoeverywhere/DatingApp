@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 
 namespace DatingApp.API.Helpers
@@ -9,6 +10,16 @@ namespace DatingApp.API.Helpers
             respuesta.Headers.Add("Aplication-Error", mensaje);
             respuesta.Headers.Add("Access-Control-Expose-Headers", "Application-Error"); //Habilita que muestre los headers de Access-Control y Application-Error.
             respuesta.Headers.Add("Access-Control-Allow-Origin", "*"); // Permite que cualquier origen pueda verlos.
+        }
+
+        // A datetime le agrego este atributo
+          public static int CalcularEdad(this DateTime dt)
+        {
+          var edad = DateTime.Today.Year - dt.Year;
+          if(dt.AddYears(edad) > DateTime.Today){
+              edad--;
+          }
+          return edad;
         }
     }
 }

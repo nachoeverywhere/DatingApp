@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
 using DatingApp.API.Interfaces;
@@ -37,9 +38,16 @@ namespace DatingApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AplicacionContext>(c => c.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddControllers();
+           
+           // Uso esto para evitar error de dependencias circulares al momento de obtener objetos (Usuario-Photo-Usuario-Photo-Usuario..)
+            services.AddControllers().AddNewtonsoftJson(opt => {
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
             services.AddCors();
+            services.AddAutoMapper(typeof(AppRepositorio).Assembly);
+            // Hago los repositorios accesibles a nivel global del programa.
             services.AddScoped<IAuthRepositorio, AuthRepositorio>();
+            services.AddScoped<IAppRepositorio, AppRepositorio>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
             AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters
