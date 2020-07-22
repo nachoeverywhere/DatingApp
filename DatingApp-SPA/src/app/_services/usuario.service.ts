@@ -32,4 +32,10 @@ getUsuario(id: number): Observable<Usuario>{
   // Al ser un tipo personalizado y no objeto generico tengo que castearlo a usuario
 }
 
+editarUsuario(id: number, usuario: Usuario){
+  //                   Va por url                     Va por el body.
+ return this.http.put(this.baseUrl + 'usuairos/' + id, usuario);
+
+}
+
 }

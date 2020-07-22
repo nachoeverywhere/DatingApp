@@ -21,8 +21,12 @@ import { ListaMatchesComponent } from './lista-matches/lista-matches.component';
 import { MensajesComponent } from './mensajes/mensajes.component';
 import { appRoutes } from './routes';
 import { DetalleUsuariosComponent } from './usuarios/detalle-usuarios/detalle-usuarios.component';
+import { EditarUsuariosComponent } from './usuarios/editar-usuarios/editar-usuarios.component';
 import { DetalleUsuariosResolver } from '../app/_resolvers/detalle-usuarios.resolver';
 import { ListaUsuariosResolver } from '../app/_resolvers/lista-usuarios.resolver';
+import { EditarUsuariosResolver } from './_resolvers/editar-usuarios.resolver';
+import {AuthGuard} from './_guards/auth.guard';
+import {PrevenirCambiosNoGuardados} from './_guards/prevenir-cambios-no-guardados.guard';
 
 export function obtenerToken() {
    return localStorage.getItem('DTApp-token');
@@ -38,7 +42,8 @@ export function obtenerToken() {
       ListaMatchesComponent,
       MensajesComponent,
       TarjetaUsuariosComponent,
-      DetalleUsuariosComponent
+      DetalleUsuariosComponent,
+      EditarUsuariosComponent
    ],
    imports: [
       BrowserModule,
@@ -61,7 +66,10 @@ export function obtenerToken() {
       AuthService,
       DetalleUsuariosResolver,
       ListaUsuariosResolver,
-      ErrorInterceptorProvider
+      EditarUsuariosResolver,
+      ErrorInterceptorProvider,
+      AuthGuard,
+      PrevenirCambiosNoGuardados
    ],
    bootstrap: [
       AppComponent
