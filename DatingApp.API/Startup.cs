@@ -43,6 +43,8 @@ namespace DatingApp.API
             services.AddControllers().AddNewtonsoftJson(opt => {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
+            //Esto hace un binding de appsettings con la clase confcloudinary que cree (MIND-BLOWN! :O)
+            services.Configure<ConfCloudinary>(Configuration.GetSection("Cloudinary"));
             services.AddCors();
             services.AddAutoMapper(typeof(AppRepositorio).Assembly);
             // Hago los repositorios accesibles a nivel global del programa.

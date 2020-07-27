@@ -44,5 +44,11 @@ namespace DatingApp.API.Repositorios
             //Por cada cambio en la base de dato devuelve +1, entonces si comparo con > 0 se puede determinar si guardo o no. 
             return await Db.SaveChangesAsync() > 0;
         }
+
+        public async Task<Photo> ObtenerPhoto(int id)
+        {
+            var photo = await Db.Photos.FirstOrDefaultAsync(p => p.id == id);
+            return photo;
+        }
     }
 }

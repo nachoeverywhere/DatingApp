@@ -8,6 +8,7 @@ import {RouterModule} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import {NgxGalleryModule} from '@kolkov/ngx-gallery';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { NavComponent } from './nav/nav.component';
 import { AppComponent } from './app.component';
@@ -27,6 +28,8 @@ import { ListaUsuariosResolver } from '../app/_resolvers/lista-usuarios.resolver
 import { EditarUsuariosResolver } from './_resolvers/editar-usuarios.resolver';
 import {AuthGuard} from './_guards/auth.guard';
 import {PrevenirCambiosNoGuardados} from './_guards/prevenir-cambios-no-guardados.guard';
+import { EditorPhotosComponent } from './usuarios/editor-photos/editor-photos.component';
+
 
 export function obtenerToken() {
    return localStorage.getItem('DTApp-token');
@@ -43,7 +46,8 @@ export function obtenerToken() {
       MensajesComponent,
       TarjetaUsuariosComponent,
       DetalleUsuariosComponent,
-      EditarUsuariosComponent
+      EditarUsuariosComponent,
+      EditorPhotosComponent
    ],
    imports: [
       BrowserModule,
@@ -54,6 +58,7 @@ export function obtenerToken() {
       BsDropdownModule.forRoot(),
       RouterModule.forRoot(appRoutes),
       NgxGalleryModule,
+      FileUploadModule,
       JwtModule.forRoot({
          config: {
             tokenGetter: obtenerToken,

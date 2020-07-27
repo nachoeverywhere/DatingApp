@@ -11,5 +11,6 @@ namespace DatingApp.API.Interfaces
          Task<bool> GuardarCambios();
          Task<IEnumerable<Usuario>> GetUsuarios();
          Task<Usuario> GetUsuario(int id);
+        Task<Photo> ObtenerPhoto(int id);
     }
 }
