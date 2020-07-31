@@ -51,6 +51,7 @@ export class DetalleUsuariosComponent implements OnInit {
     }
     return photosUrls;
   }
+
   // usuarios/id
   // cargarUsuario(){
   //   // Obtengo el parametro a traves de la ruta, especifico el nombre del parametro dentro de los corchetes rectos,
@@ -61,4 +62,5 @@ export class DetalleUsuariosComponent implements OnInit {
   //     this.alertify.error(error);
   //   });
   // }
+
 }

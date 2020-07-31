@@ -38,4 +38,8 @@ editarUsuario(id: number, usuario: Usuario){
 
 }
 
+establecerPhotoPrincipal(id: number, idPhoto: number){
+  return this.http.post(this.baseUrl + 'usuarios/' + id + '/photos/' + idPhoto + '/establecerPhotoPrincipal', {});
+}
+
 }

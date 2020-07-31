@@ -1,8 +1,10 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.DTOs;
 using DatingApp.API.Interfaces;
 using DatingApp.API.Models;
@@ -14,15 +16,17 @@ namespace DatingApp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+
     public class AuthController : ControllerBase
     {
 
         private readonly IAuthRepositorio Repo;
         private readonly IConfiguration Config;
+        private readonly IMapper Mapper;
 
-        public AuthController(IAuthRepositorio repo, IConfiguration config)
+        public AuthController(IAuthRepositorio repo, IConfiguration config, IMapper mapper)
         {
+            this.Mapper = mapper;
             this.Config = config;
             this.Repo = repo;
         }
@@ -70,7 +74,8 @@ namespace DatingApp.API.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             //El tokenDescriptor contiene las claims, fecha de expracion y signin credentials.
-            var tokenDescriptor = new SecurityTokenDescriptor{
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = creds
@@ -82,10 +87,15 @@ namespace DatingApp.API.Controllers
             //Creo el token usando un metodo del token handler.
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            //Creo el usuario a devolver (para poder mostrar fotos y demas), ojo con la info se devuelve, en este caso uso un DTO que tiene informaicon limitada y publica
+            var usuarioRespuesta = Mapper.Map<UsuarioEnListaDTO>(usuario);
             //Devuelvo un objeto tipo JSON (new{}) con un atributo llamado token, token va a ser el token a utilizar 
             // y lo escribo (algo asi como un toString) usando el metodo WriteToken del tokenHandler.
-            return Ok(new {
-                token = tokenHandler.WriteToken(token)
+            // Puedo devolver informaicon adicional aparte del token (photo de perfil)
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                usuarioRespuesta = usuarioRespuesta
             });
         }
     }

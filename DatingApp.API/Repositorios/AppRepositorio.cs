@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Interfaces;
@@ -43,6 +44,12 @@ namespace DatingApp.API.Repositorios
         {
             //Por cada cambio en la base de dato devuelve +1, entonces si comparo con > 0 se puede determinar si guardo o no. 
             return await Db.SaveChangesAsync() > 0;
+        }
+
+        public async Task<Photo> ObtenerFotoPrincipalUsuario(int usuarioId)
+        {
+            var photo = await Db.Photos.FirstOrDefaultAsync(p => p.UsuarioId == usuarioId && p.EsPrincipal == true);
+            return photo;
         }
 
         public async Task<Photo> ObtenerPhoto(int id)

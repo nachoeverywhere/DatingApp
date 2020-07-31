@@ -45,7 +45,7 @@
   
           <div class="card-footer">
             
-            <button [disabled]="!formularioTocado.dirty" form="formulario" class="btn btn-success btn-block"> Guardar cambios </button>
+            <button [disabled]="!formularioTocado.dirty" class="btn-block" form="formulario" [ngClass]="formularioTocado.dirty ? 'btn btn-success' : 'btn btn-secondary' "> Guardar cambios </button>
           
           </div>
         </div>
@@ -77,8 +77,8 @@
             </form>
             </tab>
 
-            <tab heading="Editar Fotos">
-              <app-editor-photos [photos]="usuario.fotosPublicas"></app-editor-photos>
+            <tab heading="Editar Fotos" class="p-3">
+              <app-editor-photos [photos]="usuario.fotosPublicas" (cambiarPhotoUsuario)="actualizarPhoto($event)"></app-editor-photos>
             </tab>
             
           </tabset>

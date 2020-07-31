@@ -28,7 +28,8 @@ namespace DatingApp.API.Controllers
         private readonly IOptions<ConfCloudinary> cloudinaryConfig;
         private Cloudinary cloudinary;
         // IMapper es propio de dotnet, IOptions transforma las appsetings a un objeto del tipo que especifique, hace un mappeo en base a los nombres de las properties. 
-        public PhotosController(IAppRepositorio repo, IMapper mapper, IOptions<ConfCloudinary> cloudinaryConfig){
+        public PhotosController(IAppRepositorio repo, IMapper mapper, IOptions<ConfCloudinary> cloudinaryConfig)
+        {
             this.repo = repo;
             this.mapper = mapper;
             this.cloudinaryConfig = cloudinaryConfig;
@@ -42,7 +43,8 @@ namespace DatingApp.API.Controllers
             this.cloudinary = new Cloudinary(acc);
         }
         [HttpGet("{idPhoto}", Name = "ObtenerPhoto")]
-        public async Task<IActionResult> ObtenerPhoto(int idPhoto){
+        public async Task<IActionResult> ObtenerPhoto(int idPhoto)
+        {
             var photoRepositorio = await repo.ObtenerPhoto(idPhoto);
             var photo = mapper.Map<PhotoADevolverDTO>(photoRepositorio);
 
@@ -50,21 +52,22 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AgregarFotoAUsuario(int id, [FromForm]PhotoACrearDTO photoDTO)
+        public async Task<IActionResult> AgregarFotoAUsuario(int id, [FromForm] PhotoACrearDTO photoDTO)
         {
-            // UTILIZANDO LA LIBRERIA DE CLOUDINARY
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-            return Unauthorized();
+                return Unauthorized();
 
             var usuario = await repo.GetUsuario(id);
 
             var archivo = photoDTO.Archivo;
 
+            // UTILIZANDO LA LIBRERIA DE CLOUDINARY
             var resultado = new ImageUploadResult();
 
             if (archivo.Length > 0)
             {
-                using (var stream = archivo.OpenReadStream()){
+                using (var stream = archivo.OpenReadStream())
+                {
                     // File es el nombre del atributo de la clase ImageUploadParams (Propio de Cloudinary)
                     var parametrosDeSubida = new ImageUploadParams()
                     {
@@ -87,12 +90,39 @@ namespace DatingApp.API.Controllers
 
             usuario.FotosPublicas.Add(photo);
 
-            if (await repo.GuardarCambios()){
+            if (await repo.GuardarCambios())
+            {
                 var photoADevolver = mapper.Map<PhotoADevolverDTO>(photo);
-                return CreatedAtRoute("ObtenerPhoto", new {id = usuario.Id, idPhoto = photo.id}, photoADevolver);
+                return CreatedAtRoute("ObtenerPhoto", new { id = usuario.Id, idPhoto = photo.id }, photoADevolver);
                 // id es el parametro de id de usuario que requiere la ruta, idPhoto es la que requiere ObtenerPhoto
             }
             return BadRequest("No se pudo agregar la foto.");
+        }
+        [HttpPost("{idPhoto}/establecerPhotoPrincipal")] // Debiera ser un put, pero al estar modificando simplemente un atributo de true a false me parece mas practico asi. (Cons: La API no es tan Restful)
+        public async Task<IActionResult> EstablecerPhotoPrincipal(int id, int idPhoto)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var usuario = await repo.GetUsuario(id);
+
+            if (!usuario.FotosPublicas.Any(p => p.id == idPhoto))
+                return Unauthorized();
+            
+            var photo = await repo.ObtenerPhoto(idPhoto);
+
+            if (photo.EsPrincipal)
+                return BadRequest("La foto ya es principal.");
+            
+            var photoPrincipalActual = await repo.ObtenerFotoPrincipalUsuario(id);
+
+            photoPrincipalActual.EsPrincipal = false;
+
+            photo.EsPrincipal = true;
+
+            if (await repo.GuardarCambios())
+                return NoContent();
+            return BadRequest("No se pudo actualizar el estado de la foto");
         }
 
     }

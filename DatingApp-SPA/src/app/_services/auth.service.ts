@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
+import { Usuario } from '../_models/usuario';
 
 // Injectable significa que puede ser injectado en componentes.
 @Injectable({
@@ -14,6 +15,7 @@ export class AuthService {
 baseUrl = environment.apiUrl + 'auth/';
 jwtHelper = new JwtHelperService();
 tokenDesencriptado: any;
+usuarioActivo: Usuario;
 
 constructor(private http: HttpClient) {}
 
@@ -24,6 +26,8 @@ ingresar(model: any): any{
       const usuario = response;
       if (usuario){
         localStorage.setItem('DTApp-token', usuario.token);
+        localStorage.setItem('DTApp-usuario', JSON.stringify(usuario));
+        this.usuarioActivo = usuario.usuarioRespuesta;
         this.tokenDesencriptado = this.jwtHelper.decodeToken(usuario.token);
       }
     })

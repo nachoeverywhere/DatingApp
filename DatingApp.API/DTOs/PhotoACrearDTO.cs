@@ -9,6 +9,7 @@ namespace DatingApp.API.DTOs
         public IFormFile Archivo {get; set;}
         public string Descripcion {get; set;}
         public DateTime FechaSubida {get; set;}
+        public string EsPrincipal {get; set;}
         public string PublicId {get; set;}
 
 

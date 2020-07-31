@@ -18,6 +18,7 @@
     </ul>
 
     <div *ngIf="sesionActiva()" class="dropdown show" dropdown>
+     
       <a class="dropdown-toggle text-light" dropdownToggle>
         Bienvenido {{authService.tokenDesencriptado.unique_name | titlecase}}
       </a>
@@ -27,6 +28,10 @@
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" (click)="salir()"><i class="fa fa-sign-out"></i>Salir</a>
       </div>
+
+      <span class="ml-2">
+        <img src="{{authService.usuarioActivo.photoUrl}}" alt="">
+      </span>
     </div>
 
     <form *ngIf="!sesionActiva()" #ingresoForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="ingresar(model)"> <!--(ngSubmit)="ingresar()" llama a la funcion al momento de 'submitear' el formulario-->

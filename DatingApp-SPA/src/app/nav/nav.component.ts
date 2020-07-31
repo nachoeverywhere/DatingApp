@@ -35,6 +35,9 @@ export class NavComponent implements OnInit {
 
   salir(): void{
     localStorage.removeItem('DTApp-token');
+    localStorage.removeItem('DTApp-usuario');
+    this.authService.tokenDesencriptado = null;
+    this.authService.usuarioActivo = null;
     this.alertify.mensaje('Sesion cerrada');
     this.router.navigate(['/inicio']);
   }

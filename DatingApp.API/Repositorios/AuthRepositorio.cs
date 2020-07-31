@@ -19,7 +19,7 @@ namespace DatingApp.API.Repositorios
 
         public async Task<Usuario> Login(string username, string password)
         {
-            var user = await Db.Usuarios.FirstOrDefaultAsync(u => u.NombreUsuario == username);
+            var user = await Db.Usuarios.Include(p => p.FotosPublicas).FirstOrDefaultAsync(u => u.NombreUsuario == username);
             
             if(user == null) return null;
             if(!VerificarPasswordHash(password, user.PasswordSalt, user.PasswordHash))return null; // Metodo propio, creado.
